@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -8,26 +9,35 @@ int main()
 {
     ifstream inFile("input.txt");
 
-    int no_problems, no_doctors;
-    string name, speciality;
-    
-    inFile >> no_problems;
+    vector<string> doctors;
+    vector<pair<string, string>> problems;
+    int nrProblems, nrDocs;
 
-    for (int i = 0; i < no_problems; i++)
-    {
-        inFile >> name;
-        inFile >> speciality;
-        cout << name << ' ' << speciality << '\n';
+    inFile >> nrProblems;
+    while (nrProblems--) {
+        string problem, speciality;
+        inFile >> problem >> speciality;
+
+        problems.emplace_back(problem, speciality);
     }
 
-    inFile >> no_doctors;
+    inFile >> nrDocs;
+    while (nrDocs--) {
+        string docId, doc;
+        inFile >> docId >> doc;
 
-    for (int i = 0; i < no_doctors; i++)
-    {
-        inFile >> name;
-        inFile >> speciality;
-        cout << name << ' ' << speciality << '\n';
+        doctors.emplace_back(doc);
     }
+
+    for (const auto& problem : problems) {
+        int ok = 0;
+        for (const auto& doctor : doctors) {
+            if (doctor == problem.second) { ok = 1; break; }
+        }
+        if (ok) cout << problem.first << " Acceptat\n";
+        else cout << problem.first << " Respins\n";
+    }
+
 
     return 0;
 }
