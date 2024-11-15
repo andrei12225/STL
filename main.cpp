@@ -4,32 +4,38 @@
 #include <vector>
 #include <algorithm>
 
-using namespace std;
+#define WORKING_HOURS 9;
 
-class Doctor {
-public:
-    string id, speciality;
-    bool busy = false;
-    Doctor(const string& id, const string& speciality) {
-        this->id = id;
-        this->speciality = speciality;
-    }
-};
+using namespace std;
 
 class Problem {
 public:
     string name, specialityNeeded;
-    Problem(const string& name, const string& specialityNeeded) {
+    int timeNeeded;
+    Problem(const string& name, const string& specialityNeeded, const int& timeNeeded) {
         this->name = name;
         this->specialityNeeded = specialityNeeded;
+        this->timeNeeded = timeNeeded;
+    }
+};
+
+class Doctor {
+public:
+    string id, speciality;
+    int hoursWorked = 0;
+    vector<Problem> problemsSolved;
+    Doctor(const string& id, const string& speciality) {
+        this->id = id;
+        this->speciality = speciality;
+        this->problemsSolved = problemsSolved;
     }
 };
 
 int main()
 {
-    ifstream inFile("input.txt");
+    ifstream inFile("input4_bonus.txt");
 
-    int no_problems, no_doctors;
+    int no_problems, no_doctors, timeNeeded;
     string problemName, specialityNeeded, doctorId;
     vector<Problem> problems;
     vector<Doctor> doctors;
@@ -37,9 +43,9 @@ int main()
     inFile >> no_problems;
 
     for (int i = 0; i < no_problems; ++i) {
-        inFile >> problemName >> specialityNeeded;
+        inFile >> problemName >> specialityNeeded >> timeNeeded;
 
-        Problem problem(problemName, specialityNeeded);
+        Problem problem(problemName, specialityNeeded, timeNeeded);
         problems.push_back(problem);
     }
 
@@ -54,13 +60,21 @@ int main()
 
     for (auto & problem : problems) {
         const auto lambda = [problem](const Doctor& doctor) {
-            return problem.specialityNeeded == doctor.speciality && !doctor.busy;
+            return problem.specialityNeeded == doctor.speciality && doctor.hoursWorked + problem.timeNeeded < WORKING_HOURS;
         };
         auto doctor = find_if(begin(doctors), end(doctors), lambda);
         if (doctor != end(doctors)) {
-            doctor->busy = true;
-            cout << doctor->id << " " << problem.name << "\n";
+            doctor->hoursWorked += problem.timeNeeded;
+            doctor->problemsSolved.push_back(problem);
         }
+    }
+
+    for (const auto & doctor : doctors) {
+        cout << doctor.id << " " << doctor.problemsSolved.size() << " ";
+        for (const auto & problem : doctor.problemsSolved) {
+            cout << problem.name << " ";
+        }
+        cout << "\n";
     }
 
     return 0;
