@@ -27,7 +27,6 @@ public:
     Doctor(const string& id, const string& speciality) {
         this->id = id;
         this->speciality = speciality;
-        this->problemsSolved = problemsSolved;
     }
 };
 
