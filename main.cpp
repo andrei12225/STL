@@ -23,7 +23,7 @@ public:
 
 struct ProblemComparator {
     bool operator()(const Problem& p1, const Problem& p2) const {
-        return p2.priority > p1.priority;
+        return p1.priority < p2.priority;
     }
 };
 
@@ -40,7 +40,7 @@ public:
 
 int main()
 {
-    ifstream inFile("input.txt");
+    ifstream inFile("input4_bonus.txt");
 
     int no_problems, no_doctors, timeNeeded, priority;
     string problemName, specialityNeeded, doctorId;
