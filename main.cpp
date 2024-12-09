@@ -40,7 +40,7 @@ public:
 
 int main()
 {
-    ifstream inFile("input4_bonus.txt");
+    ifstream inFile("input.txt");
 
     int no_problems, no_doctors, timeNeeded, priority;
     string problemName, specialityNeeded, doctorId;
