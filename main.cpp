@@ -79,7 +79,7 @@ int main()
     }
 
     for (const auto & doctor : doctors) {
-        if (doctor.problemsSolved.size() == 0) continue;
+        if (doctor.problemsSolved.empty()) continue;
         cout << doctor.id << " " << doctor.problemsSolved.size() << " ";
         for (const auto & problem : doctor.problemsSolved) {
             cout << problem.name << " ";
