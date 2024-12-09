@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <queue>
 
 #define WORKING_HOURS 9;
 
@@ -12,18 +11,11 @@ using namespace std;
 class Problem {
 public:
     string name, specialityNeeded;
-    int timeNeeded, priority;
-    Problem(const string& name, const string& specialityNeeded, const int& timeNeeded, const int& priority) {
+    int timeNeeded;
+    Problem(const string& name, const string& specialityNeeded, const int& timeNeeded) {
         this->name = name;
         this->specialityNeeded = specialityNeeded;
         this->timeNeeded = timeNeeded;
-        this->priority = priority;
-    }
-};
-
-struct ProblemComparator {
-    bool operator()(const Problem& p1, const Problem& p2) const {
-        return p2.priority > p1.priority;
     }
 };
 
@@ -42,18 +34,18 @@ int main()
 {
     ifstream inFile("input4_bonus.txt");
 
-    int no_problems, no_doctors, timeNeeded, priority;
+    int no_problems, no_doctors, timeNeeded;
     string problemName, specialityNeeded, doctorId;
-    priority_queue<Problem, vector<Problem>, ProblemComparator> problems;
+    vector<Problem> problems;
     vector<Doctor> doctors;
 
     inFile >> no_problems;
 
     for (int i = 0; i < no_problems; ++i) {
-        inFile >> problemName >> specialityNeeded >> timeNeeded >> priority;
+        inFile >> problemName >> specialityNeeded >> timeNeeded;
 
-        Problem problem(problemName, specialityNeeded, timeNeeded, priority);
-        problems.push(problem);
+        Problem problem(problemName, specialityNeeded, timeNeeded);
+        problems.push_back(problem);
     }
 
     inFile >> no_doctors;
@@ -65,9 +57,7 @@ int main()
         doctors.push_back(doctor);
     }
 
-    while (!problems.empty()) {
-        auto problem = problems.top();
-        problems.pop();
+    for (auto & problem : problems) {
         const auto lambda = [problem](const Doctor& doctor) {
             return problem.specialityNeeded == doctor.speciality && doctor.hoursWorked + problem.timeNeeded < WORKING_HOURS;
         };
@@ -79,7 +69,6 @@ int main()
     }
 
     for (const auto & doctor : doctors) {
-        if (doctor.problemsSolved.size() == 0) continue;
         cout << doctor.id << " " << doctor.problemsSolved.size() << " ";
         for (const auto & problem : doctor.problemsSolved) {
             cout << problem.name << " ";
